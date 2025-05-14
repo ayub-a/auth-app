@@ -9,6 +9,7 @@ export interface IUserModel extends mongoose.Document {
     createdAt: Date
     updatedAt: Date
     comparePassword(val: string): Promise<boolean>
+    omitPassword(): Omit<IUserModel, 'password'>
 }
 
 
@@ -36,6 +37,13 @@ userModel.pre('save', async function(next) {
 
 userModel.methods.comparePassword = async function(val: string) {
     return compareValue(val, this.password)
+}
+
+
+userModel.methods.omitPassword = function() {
+    const user = this.toObject()
+    delete user.password
+    return user
 }
 
 

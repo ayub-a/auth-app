@@ -3,7 +3,10 @@ import jwt from "jsonwebtoken"
 import { UserModel } from "../models/user.model"
 import { SessionModel } from "../models/session.model"
 
+import { appAssert } from "../utils/appAssert"
+
 import { JWT_REFRESH_SECRET, JWT_SECRET } from "../constants/env"
+import { HTTP_STATUS } from "../constants/http"
 
 
 interface ICreateAccountParams {
@@ -18,7 +21,8 @@ class AuthService {
     async createAccount(data: ICreateAccountParams) {
 
         const isUserExist = await UserModel.exists({ email: data.email })
-        if (isUserExist) throw new Error('User already exist.')
+
+        appAssert(!isUserExist, HTTP_STATUS.CONFLICT, 'Email already in use')
 
         const user = await UserModel.create({
             email: data.email,
@@ -57,7 +61,11 @@ class AuthService {
             }
         )
 
-        return { user, refreshToken, accessToken }
+        return { 
+            user: user.omitPassword(), 
+            refreshToken, 
+            accessToken 
+        }
     }
 
 }

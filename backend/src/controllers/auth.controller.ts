@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import { z } from "zod"
 
 import { authService } from "../services/auth.service"
-import { HTTP_RESPONSE } from "../constants/http"
+import { HTTP_STATUS } from "../constants/http"
 import { setAuthCookies } from "../utils/cookies"
 
 
@@ -33,7 +33,7 @@ class AuthController {
             const { user, accessToken, refreshToken } = await authService.createAccount(request)
 
             setAuthCookies({ res, accessToken, refreshToken })
-                .status(HTTP_RESPONSE.SUCCESS.CREATED.code)
+                .status(HTTP_STATUS.CREATED)
                 .json(user)
         } catch(error) {
             next(error)

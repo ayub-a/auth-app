@@ -1,19 +1,16 @@
 
-export const HTTP_RESPONSE = {
-    SUCCESS: {
-        OK: { code: 200, message: 'OK' },
-        CREATED: { code: 201, message: 'Created successfully' },
-    },
-    CLIENT_ERROR: {
-        BAD_REQUEST: { code: 400, message: 'Bad request' },
-        UNAUTHORIZED: { code: 401, message: 'Unauthorized' },
-        FORBIDDEN: { code: 403, message: 'Forbidden' },
-        NOT_FOUND: { code: 404, message: 'Not found' },
-        CONFLICT: { code: 409, message: 'Conflict' },
-        UNPROCESSABLE_CONTENT: { code: 422, message: 'Unprocessable entity' },
-        TOO_MANY_REQUESTS: { code: 429, message: 'Too many requests' },
-    },
-    SERVER_ERROR: {
-        INTERNAL_SERVER_ERROR: { code: 500, message: 'Internal server error' },
-    },
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  CONFLICT: 409,
+  UNPROCESSABLE_CONTENT: 422,
+  TOO_MANY_REQUESTS: 429,
+  INTERNAL_SERVER_ERROR: 500,
 } as const
+
+
+export type THttpStatusCode = typeof HTTP_STATUS[keyof typeof HTTP_STATUS]

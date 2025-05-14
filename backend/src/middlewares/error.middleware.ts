@@ -1,19 +1,26 @@
 import { ErrorRequestHandler, Response } from "express";
 import { z } from "zod";
 
-import { HTTP_RESPONSE } from "../constants/http";
+import { HTTP_STATUS } from "../constants/http";
+import { AppError } from "../utils/AppError";
 
 
 const handleZodError = (res: Response, err: z.ZodError) => {
-
-    const { code, message } = HTTP_RESPONSE.CLIENT_ERROR.BAD_REQUEST
 
     const errors = err.issues.map((err) => ({ 
         path: err.path.join('.'),
         message: err.message
      }))
 
-    return res.status(code).json({ message, errors })
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({ message: err.message, errors })
+}
+
+
+const handleAppError = (res: Response, error: AppError) => {
+    return res.status(error.statusCode).json({
+        message: error.message,
+        errorCode: error.errorCode
+    })
 }
 
 
@@ -25,8 +32,11 @@ export const errorMiddleware: ErrorRequestHandler = (err, req, res, next) => {
         return
     }
 
-    const { code, message } = HTTP_RESPONSE.SERVER_ERROR.INTERNAL_SERVER_ERROR
+    if (err instanceof AppError) {
+        handleAppError(res, err)
+        return
+    }
 
-    res.status(code).send(err.message || message)
+    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).send(err.message)
     return
 }
