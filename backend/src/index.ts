@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import { APP_ORIGIN, NODE_ENV, PORT } from './constants/env'
 import { connectToDatabase } from './config/db'
 
+import authRouter from './routes/auth.route'
 import { errorMiddleware } from './middlewares/error.middleware'
 
 
@@ -19,9 +20,7 @@ app.use(cors({
 app.use(cookieParser())
 
 
-app.get('/',(req, res) => {
-   throw new Error('Test error!')
-})
+app.use('/auth', authRouter)
 
 
 app.use(errorMiddleware)
