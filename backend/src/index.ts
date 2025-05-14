@@ -5,6 +5,8 @@ import cookieParser from 'cookie-parser'
 import { APP_ORIGIN, NODE_ENV, PORT } from './constants/env'
 import { connectToDatabase } from './config/db'
 
+import { errorMiddleware } from './middlewares/error.middleware'
+
 
 const app = express()
 
@@ -15,6 +17,14 @@ app.use(cors({
     credentials: true
 }))
 app.use(cookieParser())
+
+
+app.get('/',(req, res) => {
+   throw new Error('Test error!')
+})
+
+
+app.use(errorMiddleware)
 
 
 app.listen(
