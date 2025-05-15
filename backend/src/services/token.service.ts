@@ -23,39 +23,39 @@ interface IVerifyOptions extends VerifyOptions {
 }
 
 
-class SignToken {
+class TokenService {
 
-    private readonly defaults: SignOptions = {
+    private static defaults: SignOptions = {
         audience: ['user']
     }
 
-    private readonly accessTokenSignOptions: ISignOptionsAndSecret = {
+    private static readonly accessTokenSignOptions: ISignOptionsAndSecret = {
         expiresIn: '15min',
         secret: JWT_SECRET
     }
 
-    private readonly refreshTokenSignOptions: ISignOptionsAndSecret = {
+    private static readonly refreshTokenSignOptions: ISignOptionsAndSecret = {
         expiresIn: '30d',
         secret: JWT_REFRESH_SECRET
     }
 
 
     createAccessToken(payload: IAccessTokenPayload, options?: ISignOptionsAndSecret) {
-        const { secret, ...signOptions } = options || this.accessTokenSignOptions
-        return jwt.sign(payload, secret, { ...this.defaults, ...signOptions })
+        const { secret, ...signOptions } = options || TokenService.accessTokenSignOptions
+        return jwt.sign(payload, secret, { ...TokenService.defaults, ...signOptions })
     }
 
 
     createRefreshToken(payload: IRefreshTokenPayload, options?: ISignOptionsAndSecret) {
-        const { secret, ...signOptions } = options || this.refreshTokenSignOptions
-        return jwt.sign(payload, secret, { ...this.defaults, ...signOptions })
+        const { secret, ...signOptions } = options || TokenService.refreshTokenSignOptions
+        return jwt.sign(payload, secret, { ...TokenService.defaults, ...signOptions })
     }
 
 
     verify<TPayload extends object = IAccessTokenPayload>(token: string, options?: IVerifyOptions) {
         try {
             const { secret = JWT_SECRET, ...verifyOptions } = options || {}
-            const payload  = jwt.verify( token, secret, { ...this.defaults, ...verifyOptions }) as TPayload
+            const payload  = jwt.verify( token, secret, { ...TokenService.defaults, ...verifyOptions }) as TPayload
             
             return {
                 payload
@@ -70,4 +70,4 @@ class SignToken {
 }
 
 
-export const signToken = new SignToken()
+export const tokenService = new TokenService()

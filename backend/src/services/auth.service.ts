@@ -3,7 +3,7 @@ import { UserModel } from "../models/user.model"
 import { SessionModel } from "../models/session.model"
 
 import { appAssert } from "../utils/appAssert"
-import { signToken } from "../utils/jwt"
+import { tokenService } from "./token.service"
 
 import { HTTP_STATUS } from "../constants/http"
 import { EAappErrorCode } from "../constants/appErrorCode"
@@ -38,8 +38,8 @@ class AuthService {
             userAgent: data.userAgent
         })
 
-        const accessToken = signToken.createAccessToken({ userId: user._id, sessionId: session._id })
-        const refreshToken = signToken.createRefreshToken({ sessionId: session._id  })
+        const accessToken = tokenService.createAccessToken({ userId: user._id, sessionId: session._id })
+        const refreshToken = tokenService.createRefreshToken({ sessionId: session._id  })
 
         return { 
             user: user.omitPassword(), 
@@ -62,8 +62,8 @@ class AuthService {
             userAgent: data.userAgent       
         })
 
-        const accessToken = signToken.createAccessToken({ userId: user._id, sessionId: session._id })
-        const refreshToken = signToken.createRefreshToken({ sessionId: session._id  })
+        const accessToken = tokenService.createAccessToken({ userId: user._id, sessionId: session._id })
+        const refreshToken = tokenService.createRefreshToken({ sessionId: session._id  })
 
         return {
             user: user.omitPassword(),
@@ -74,7 +74,7 @@ class AuthService {
 
 
     async logout(token: string) {
-        const { payload } = signToken.verify(token)
+        const { payload } = tokenService.verify(token)
         appAssert(payload, HTTP_STATUS.UNAUTHORIZED, EAappErrorCode.InvalidAccessToken)
 
         await SessionModel.findByIdAndDelete(payload.sessionId)
