@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-
-import { thirtyDaysFromNow } from "../utils/date";
+import { TimeUtils } from '../utils/date';
 
 
 export interface ISessionModel extends mongoose.Document {
@@ -15,7 +14,7 @@ const sessionModel = new mongoose.Schema<ISessionModel>({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
     userAgent: { type: String },
     createdAt: { type: Date, required: true, default: Date.now },
-    expiresAt: { type: Date, default: thirtyDaysFromNow }
+    expiresAt: { type: Date, default: TimeUtils.thirtyDaysFromNow }
 })
 
 
