@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 
 import { authService } from "../../services/auth.service"
-import { clearAuthCookies, setAuthCookies } from "../../utils/cookies"
+import { cookiesService } from "../../services/cookie.service"
 import { HTTP_STATUS } from "../../constants/http"
 
 import { loginSchema, registerSchema } from "./auth.schema"
@@ -19,7 +19,8 @@ class AuthController {
 
             const { user, accessToken, refreshToken } = await authService.createAccount(request)
 
-            setAuthCookies({ res, accessToken, refreshToken })
+            cookiesService
+                .setAuthCookies({ res, accessToken, refreshToken })
                 .status(HTTP_STATUS.CREATED)
                 .json(user)
         } catch(error) {
@@ -38,7 +39,8 @@ class AuthController {
 
             const { user, accessToken, refreshToken } = await authService.login(request)
 
-            setAuthCookies({ res, accessToken, refreshToken })
+            cookiesService
+                .setAuthCookies({ res, accessToken, refreshToken })
                 .status(HTTP_STATUS.OK)
                 .json({ message: 'Login successful!' })
         } catch (error) {
@@ -53,7 +55,8 @@ class AuthController {
 
             await authService.logout(accessToken)
             
-            clearAuthCookies(res)
+            cookiesService
+                .clearAuthCookies(res)
                 .status(HTTP_STATUS.OK)
                 .json({ message: 'You logged out!' })
         } catch (error) {
