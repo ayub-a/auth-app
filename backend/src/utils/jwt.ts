@@ -1,4 +1,4 @@
-import jwt, { SignOptions } from "jsonwebtoken"
+import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken"
 
 import { IUserModel } from "../models/user.model"
 import { ISessionModel } from "../models/session.model"
@@ -15,6 +15,10 @@ interface IRefreshTokenPayload {
 }
 
 interface ISignOptionsAndSecret extends SignOptions {
+    secret: string
+}
+
+interface IVerifyOptions extends VerifyOptions {
     secret: string
 }
 
@@ -45,6 +49,22 @@ class SignToken {
     createRefreshToken(payload: IRefreshTokenPayload, options?: ISignOptionsAndSecret) {
         const { secret, ...signOptions } = options || this.refreshTokenSignOptions
         return jwt.sign(payload, secret, { ...this.defaults, ...signOptions })
+    }
+
+
+    verify<TPayload extends object = IAccessTokenPayload>(token: string, options?: IVerifyOptions) {
+        try {
+            const { secret = JWT_SECRET, ...verifyOptions } = options || {}
+            const payload  = jwt.verify( token, secret, { ...this.defaults, ...verifyOptions }) as TPayload
+            
+            return {
+                payload
+            }
+        } catch (error: any) {
+            return {
+                error: error.message
+            }
+        }
     }
 
 }

@@ -5,9 +5,12 @@ import { authController } from "../controllers/auth/auth.controller";
 const authRouter = Router()
 
 
-authRouter.post('/register', authController.register)
+authRouter
+    .post('/register', authController.register)
 
-authRouter.post('/login', authController.login)
+    .post('/login', authController.login)
+    
+    .get('/logout', authController.logout)
 
 
 export default authRouter

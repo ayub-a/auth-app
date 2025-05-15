@@ -6,6 +6,7 @@ import { appAssert } from "../utils/appAssert"
 import { signToken } from "../utils/jwt"
 
 import { HTTP_STATUS } from "../constants/http"
+import { EAappErrorCode } from "../constants/appErrorCode"
 
 
 interface IAuthParams {
@@ -69,6 +70,14 @@ class AuthService {
             refreshToken,
             accessToken
         }
+    }
+
+
+    async logout(token: string) {
+        const { payload } = signToken.verify(token)
+        appAssert(payload, HTTP_STATUS.UNAUTHORIZED, EAappErrorCode.InvalidAccessToken)
+
+        await SessionModel.findByIdAndDelete(payload.sessionId)
     }
 
 }

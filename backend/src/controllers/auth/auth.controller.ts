@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 
 import { authService } from "../../services/auth.service"
-import { setAuthCookies } from "../../utils/cookies"
+import { clearAuthCookies, setAuthCookies } from "../../utils/cookies"
 import { HTTP_STATUS } from "../../constants/http"
 
 import { loginSchema, registerSchema } from "./auth.schema"
@@ -41,6 +41,21 @@ class AuthController {
             setAuthCookies({ res, accessToken, refreshToken })
                 .status(HTTP_STATUS.OK)
                 .json({ message: 'Login successful!' })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async logout(req: Request,res: Response, next: NextFunction) {
+        try {
+            const { accessToken } = req.cookies
+
+            await authService.logout(accessToken)
+            
+            clearAuthCookies(res)
+                .status(HTTP_STATUS.OK)
+                .json({ message: 'You logged out!' })
         } catch (error) {
             next(error)
         }
