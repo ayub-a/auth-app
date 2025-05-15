@@ -5,12 +5,12 @@ import { ISessionModel } from "../models/session.model"
 import { JWT_REFRESH_SECRET, JWT_SECRET } from "../constants/env"
 
 
-interface IAccessTokenPayload {
+export interface IAccessTokenPayload {
     userId: IUserModel['_id']
     sessionId:  ISessionModel['_id']
 }
 
-interface IRefreshTokenPayload {
+export interface IRefreshTokenPayload {
     sessionId:  ISessionModel['_id']
 }
 
@@ -18,23 +18,23 @@ interface ISignOptionsAndSecret extends SignOptions {
     secret: string
 }
 
-interface IVerifyOptions extends VerifyOptions {
+interface ITokenVerifyOptions extends VerifyOptions {
     secret: string
 }
 
 
-class TokenService {
+export class TokenService {
 
     private static defaults: SignOptions = {
         audience: ['user']
     }
 
-    private static readonly accessTokenSignOptions: ISignOptionsAndSecret = {
+    static readonly accessTokenSignOptions: ISignOptionsAndSecret = {
         expiresIn: '15min',
         secret: JWT_SECRET
     }
 
-    private static readonly refreshTokenSignOptions: ISignOptionsAndSecret = {
+    static readonly refreshTokenSignOptions: ISignOptionsAndSecret = {
         expiresIn: '30d',
         secret: JWT_REFRESH_SECRET
     }
@@ -52,7 +52,7 @@ class TokenService {
     }
 
 
-    verify<TPayload extends object = IAccessTokenPayload>(token: string, options?: IVerifyOptions) {
+    verify<TPayload extends object = IAccessTokenPayload>(token: string, options?: ITokenVerifyOptions) {
         try {
             const { secret = JWT_SECRET, ...verifyOptions } = options || {}
             const payload  = jwt.verify( token, secret, { ...TokenService.defaults, ...verifyOptions }) as TPayload

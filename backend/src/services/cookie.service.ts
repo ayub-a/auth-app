@@ -1,5 +1,5 @@
 import { CookieOptions, Response } from "express"
-import { fifteenMinutesFromNow, thirtyDaysFromNow } from "../utils/date"
+import { TimeUtils } from "../utils/date"
 
 
 interface IParams {
@@ -9,9 +9,11 @@ interface IParams {
 }
 
 
-class CookieService {
+export class CookieService {
 
-    private static readonly REFRESH_PATH = '/auth/refresh'
+    static readonly REFRESH_PATH = '/auth/refresh'
+    static readonly ACCESS_TOKEN = 'accessToken'
+    static readonly REFRESH_TOKEN = 'refreshToken'
 
     private static readonly defaults: CookieOptions = {
         sameSite: 'strict',
@@ -19,17 +21,17 @@ class CookieService {
         secure: true
     }
 
-    private static getAccessTokenCookieOptions(): CookieOptions {
+    static get accessTokenCookieOptions(): CookieOptions {
         return {
             ...CookieService.defaults,
-            expires: fifteenMinutesFromNow()
+            expires: TimeUtils.fifteenMinutesFromNow
         }
     }
 
-    private static getRefreshTokenCookieOptions(): CookieOptions {
+    static get refreshTokenCookieOptions(): CookieOptions {
         return {
             ...CookieService.defaults,
-            expires: thirtyDaysFromNow(),
+            expires: TimeUtils.thirtyDaysFromNow,
             path: CookieService.REFRESH_PATH
         }
     } 
@@ -37,15 +39,15 @@ class CookieService {
 
     setAuthCookies({ res, accessToken, refreshToken }: IParams) {
         return res
-        .cookie('accessToken', accessToken, CookieService.getAccessTokenCookieOptions())
-        .cookie('refreshToken', refreshToken, CookieService.getRefreshTokenCookieOptions())
+        .cookie(CookieService.ACCESS_TOKEN, accessToken, CookieService.accessTokenCookieOptions)
+        .cookie(CookieService.REFRESH_TOKEN, refreshToken, CookieService.refreshTokenCookieOptions)
     }
 
 
     clearAuthCookies(res: Response) {
         return res
-        .clearCookie('accessToken')
-        .clearCookie('refreshToken', {
+        .clearCookie(CookieService.ACCESS_TOKEN)
+        .clearCookie(CookieService.REFRESH_TOKEN, {
             path: CookieService.REFRESH_PATH
         })
     }
@@ -53,4 +55,4 @@ class CookieService {
 }
 
 
-export const cookiesService = new CookieService()
+export const cookieService = new CookieService()
