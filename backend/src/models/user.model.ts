@@ -16,7 +16,7 @@ export interface IUserModel extends mongoose.Document {
 const userModel = new mongoose.Schema<IUserModel>(
     {
         email: { type: String, unique: true, required: true },
-        password: { type: String, required: true, select: false },
+        password: { type: String, required: true },
         verified: { type: Boolean, required: true, default: false }
     }, {
         timestamps: true

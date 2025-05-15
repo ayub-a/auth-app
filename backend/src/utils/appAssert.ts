@@ -13,6 +13,8 @@ type TAppAssert = (
 ) => asserts condition
 
 
+// how assert works?
+// if condition - false, then throw message
 export const appAssert: TAppAssert = (
         condition, 
         httpStatusCode,

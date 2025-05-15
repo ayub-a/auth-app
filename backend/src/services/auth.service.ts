@@ -1,15 +1,14 @@
-import jwt from "jsonwebtoken"
 
 import { UserModel } from "../models/user.model"
 import { SessionModel } from "../models/session.model"
 
 import { appAssert } from "../utils/appAssert"
+import { signToken } from "../utils/jwt"
 
-import { JWT_REFRESH_SECRET, JWT_SECRET } from "../constants/env"
 import { HTTP_STATUS } from "../constants/http"
 
 
-interface ICreateAccountParams {
+interface IAuthParams {
     email: string
     password: string
     userAgent?: string
@@ -18,7 +17,7 @@ interface ICreateAccountParams {
 
 class AuthService {
 
-    async createAccount(data: ICreateAccountParams) {
+    async createAccount(data: IAuthParams) {
 
         const isUserExist = await UserModel.exists({ email: data.email })
 
@@ -38,33 +37,37 @@ class AuthService {
             userAgent: data.userAgent
         })
 
-        const refreshToken = jwt.sign(
-            {
-                sessionId: session._id
-            }, 
-            JWT_REFRESH_SECRET, 
-            {
-                expiresIn: '30d',
-                audience: ['user']
-            }
-        )
-
-        const accessToken = jwt.sign(
-            {
-                userId: user._id,
-                sessionId: session._id
-            },
-            JWT_SECRET,
-            {
-                expiresIn: '15min',
-                audience: ['user']
-            }
-        )
+        const accessToken = signToken.createAccessToken({ userId: user._id, sessionId: session._id })
+        const refreshToken = signToken.createRefreshToken({ sessionId: session._id  })
 
         return { 
             user: user.omitPassword(), 
             refreshToken, 
             accessToken 
+        }
+    }
+
+
+    async login(data: IAuthParams) {
+
+        const user = await UserModel.findOne({ email: data.email })
+        appAssert(user, HTTP_STATUS.UNAUTHORIZED, 'Wrong email')
+
+        const isPasswordValid = await user.comparePassword(data.password)
+        appAssert(isPasswordValid, HTTP_STATUS.UNAUTHORIZED, 'Wrong password')
+
+        const session = await SessionModel.create({
+            userId: user._id,
+            userAgent: data.userAgent       
+        })
+
+        const accessToken = signToken.createAccessToken({ userId: user._id, sessionId: session._id })
+        const refreshToken = signToken.createRefreshToken({ sessionId: session._id  })
+
+        return {
+            user: user.omitPassword(),
+            refreshToken,
+            accessToken
         }
     }
 
