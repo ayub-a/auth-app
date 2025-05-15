@@ -1,8 +1,9 @@
 import { ErrorRequestHandler, Response } from "express";
 import { z } from "zod";
 
-import { HTTP_STATUS } from "../constants/http";
+import { CookieService, cookieService } from "../services/cookie.service";
 import { AppError } from "../utils/AppError";
+import { HTTP_STATUS } from "../constants/http";
 
 
 const handleZodError = (res: Response, err: z.ZodError) => {
@@ -26,6 +27,10 @@ const handleAppError = (res: Response, error: AppError) => {
 
 export const errorMiddleware: ErrorRequestHandler = (err, req, res, next) => {
     console.log(`PATH: ${req.path}`, err)
+
+    if (req.path === CookieService.REFRESH_PATH) {
+        cookieService.clearAuthCookies(res)
+    }
 
     if (err instanceof z.ZodError) {
         handleZodError(res, err)

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 
 import { authService } from "../../services/auth.service"
-import { cookiesService } from "../../services/cookie.service"
+import { CookieService, cookieService } from "../../services/cookie.service"
 import { HTTP_STATUS } from "../../constants/http"
 
 import { loginSchema, registerSchema } from "./auth.schema"
@@ -19,7 +19,7 @@ class AuthController {
 
             const { user, accessToken, refreshToken } = await authService.createAccount(request)
 
-            cookiesService
+            cookieService
                 .setAuthCookies({ res, accessToken, refreshToken })
                 .status(HTTP_STATUS.CREATED)
                 .json(user)
@@ -39,7 +39,7 @@ class AuthController {
 
             const { user, accessToken, refreshToken } = await authService.login(request)
 
-            cookiesService
+            cookieService
                 .setAuthCookies({ res, accessToken, refreshToken })
                 .status(HTTP_STATUS.OK)
                 .json({ message: 'Login successful!' })
@@ -55,10 +55,30 @@ class AuthController {
 
             await authService.logout(accessToken)
             
-            cookiesService
+            cookieService
                 .clearAuthCookies(res)
                 .status(HTTP_STATUS.OK)
                 .json({ message: 'You logged out!' })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async refresh(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { refreshToken } = req.cookies
+
+            const { accessToken, newRefreshToken } = await authService.refreshUserAccessToken(refreshToken)
+
+            if (newRefreshToken) {
+                res.cookie(CookieService.REFRESH_TOKEN, newRefreshToken, CookieService.refreshTokenCookieOptions)
+            }
+
+            res
+                .cookie(CookieService.ACCESS_TOKEN, accessToken, CookieService.accessTokenCookieOptions)
+                .status(HTTP_STATUS.OK)
+                .json({ message: 'Access token refreshed!' })
         } catch (error) {
             next(error)
         }

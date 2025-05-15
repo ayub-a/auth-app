@@ -12,5 +12,7 @@ authRouter
     
     .get('/logout', authController.logout)
 
+    .get('/refresh', authController.refresh)
+
 
 export default authRouter
