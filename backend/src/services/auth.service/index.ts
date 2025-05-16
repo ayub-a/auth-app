@@ -1,4 +1,5 @@
 import { passwordForgot } from "./ passwordForgot";
+import { passwordReset } from "./passwordReset";
 import { createAccount } from "./createAccount";
 import { login } from "./login";
 import { logout } from "./logout";
@@ -19,5 +20,6 @@ export const authService = {
     logout,
     refreshUserAccessToken,
     verifyEmail,
-    passwordForgot
+    passwordForgot,
+    passwordReset
 }

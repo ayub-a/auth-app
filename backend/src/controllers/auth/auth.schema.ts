@@ -30,4 +30,12 @@ export class AuthSchema {
 
     static readonly verifyEmailCodeShema = z.string().min(1).max(24)
 
+
+    static readonly resetPasswordSchema = z.object(
+        {
+            password: AuthSchema.passwordSchema,
+            verificationCode:  AuthSchema.verifyEmailCodeShema, 
+        }
+    )
+
 }

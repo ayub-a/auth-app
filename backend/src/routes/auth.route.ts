@@ -11,6 +11,8 @@ authRouter
     .post('/login', authController.login)
 
     .post('/password/forgot', authController.passwordForgot)
+
+    .post('/password/reset', authController.passwordReset)
     
     .get('/logout', authController.logout)
 

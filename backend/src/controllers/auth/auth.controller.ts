@@ -114,6 +114,22 @@ class AuthController {
         }
     }
 
+
+    async passwordReset(req: Request, res: Response, next: NextFunction) {
+        try {
+            const payload = AuthSchema.resetPasswordSchema.parse(req.body)
+
+            await authService.passwordReset(payload)
+
+            cookieService
+                .clearAuthCookies(res)
+                .status(HTTP_STATUS.OK)
+                .json({ message: 'Password reset successful.' })
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }
 
 
