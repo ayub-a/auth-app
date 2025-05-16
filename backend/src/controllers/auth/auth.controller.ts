@@ -4,7 +4,7 @@ import { authService } from "../../services/auth.service"
 import { CookieService, cookieService } from "../../services/cookie.service"
 import { HTTP_STATUS } from "../../constants/http"
 
-import { loginSchema, registerSchema } from "./auth.schema"
+import { loginSchema, registerSchema, verifyEmailCodeShema } from "./auth.schema"
 
 
 class AuthController {
@@ -79,6 +79,21 @@ class AuthController {
                 .cookie(CookieService.ACCESS_TOKEN, accessToken, CookieService.accessTokenCookieOptions)
                 .status(HTTP_STATUS.OK)
                 .json({ message: 'Access token refreshed!' })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async verifyEmail(req: Request, res: Response, next: NextFunction) {
+        try {
+            const verificationCode = verifyEmailCodeShema.parse(req.params.code)
+
+            await authService.verifyEmail(verificationCode)
+
+            res
+                .status(HTTP_STATUS.OK)
+                .json({ message: 'Your email was verified!' })
         } catch (error) {
             next(error)
         }

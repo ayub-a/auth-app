@@ -14,5 +14,7 @@ authRouter
 
     .get('/refresh', authController.refresh)
 
+    .get('/email/verify/:code', authController.verifyEmail)
+
 
 export default authRouter
