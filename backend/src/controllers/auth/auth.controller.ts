@@ -4,7 +4,7 @@ import { authService } from "../../services/auth.service"
 import { CookieService, cookieService } from "../../services/cookie.service"
 import { HTTP_STATUS } from "../../constants/http"
 
-import { loginSchema, registerSchema, verifyEmailCodeShema } from "./auth.schema"
+import { AuthSchema } from "./auth.schema"
 
 
 class AuthController {
@@ -12,7 +12,7 @@ class AuthController {
     async register(req: Request, res: Response, next: NextFunction) {
         try {
 
-            const request = registerSchema.parse({
+            const request = AuthSchema.registerSchema.parse({
                 ...req.body,
                 userAgent: req.headers['user-agent']
             })
@@ -32,7 +32,7 @@ class AuthController {
     async login(req: Request, res: Response, next: NextFunction) {
         try {
             
-            const request = loginSchema.parse({
+            const request = AuthSchema.loginSchema.parse({
                 ...req.body,
                 userAgent: req.headers['user-agent']
             })
@@ -87,13 +87,28 @@ class AuthController {
 
     async verifyEmail(req: Request, res: Response, next: NextFunction) {
         try {
-            const verificationCode = verifyEmailCodeShema.parse(req.params.code)
+            const verificationCode = AuthSchema.verifyEmailCodeShema.parse(req.params.code)
 
             await authService.verifyEmail(verificationCode)
 
             res
                 .status(HTTP_STATUS.OK)
                 .json({ message: 'Your email was verified!' })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async passwordForgot(req: Request, res: Response, next: NextFunction) {
+        try {
+            const email = AuthSchema.emailSchema.parse(req.body.email)
+
+            await authService.passwordForgot(email)
+
+            res
+                .status(HTTP_STATUS.OK)
+                .json({ message: 'Password reset email sent.' })
         } catch (error) {
             next(error)
         }

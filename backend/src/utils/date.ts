@@ -21,4 +21,18 @@ export class TimeUtils {
         )
     } 
 
+
+    static get oneHourFromNow() {
+        return new Date(
+            Date.now() + 60 * 60 * 1000
+        )
+    }
+
+
+    static get fiveMinutesAgo() {
+        return new Date(
+            Date.now() - 5 * 60 * 1000
+        )
+    }
+
 }

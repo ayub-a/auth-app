@@ -1,3 +1,4 @@
+import { passwordForgot } from "./ passwordForgot";
 import { createAccount } from "./createAccount";
 import { login } from "./login";
 import { logout } from "./logout";
@@ -17,5 +18,6 @@ export const authService = {
     login,
     logout,
     refreshUserAccessToken,
-    verifyEmail
+    verifyEmail,
+    passwordForgot
 }
