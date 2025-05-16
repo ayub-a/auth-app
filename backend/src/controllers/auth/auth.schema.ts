@@ -1,26 +1,33 @@
 import { z } from "zod"
 
 
-const emailSchema = z.string().email().min(8).max(255)
-const passwordSchema = z.string().min(6).max(255)
+export class AuthSchema {
+
+    static readonly emailSchema = z.string().email().min(8).max(255)
+    static readonly passwordSchema = z.string().min(6).max(255)
 
 
-export const loginSchema = z
-    .object({
-        email: emailSchema,
-        password: passwordSchema,
-        userAgent: z.string().optional()
-    })
+    static readonly loginSchema = z.object(
+        {
+            email: AuthSchema.emailSchema,
+            password: AuthSchema.passwordSchema,
+            userAgent: z.string().optional()
+        }
+    )
+ 
 
-
-export const registerSchema = loginSchema.extend({
-        confirmPassword: z.string().min(6).max(255),
-    }).refine(
-        (data) => data.password === data.confirmPassword, {
+    static readonly registerSchema = AuthSchema.loginSchema.extend(
+        { 
+            confirmPassword: z.string().min(6).max(255),
+        }
+    ).refine((data) => data.password === data.confirmPassword, 
+        {
             message: 'Password do not match.',
             path: ['confirmPassword']
         }
     )
 
 
-export const verifyEmailCodeShema = z.string().min(1).max(24)
+    static readonly verifyEmailCodeShema = z.string().min(1).max(24)
+
+}
