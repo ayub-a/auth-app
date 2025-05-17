@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { EVerificationCodeType } from "../types/verificationCodeType";
 
 
-export interface IVerificationCodeModel extends mongoose.Document {
+export interface IVerificationCodeModel extends mongoose.Document<mongoose.Types.ObjectId> {
     userId: mongoose.Types.ObjectId
     type: EVerificationCodeType
     createdAt: Date

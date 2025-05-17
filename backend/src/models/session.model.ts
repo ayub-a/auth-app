@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { TimeUtils } from '../utils/date';
 
 
-export interface ISessionModel extends mongoose.Document {
+export interface ISessionModel extends mongoose.Document<mongoose.Types.ObjectId> {
     userId: mongoose.Types.ObjectId
     userAgent?: string
     createdAt: Date
