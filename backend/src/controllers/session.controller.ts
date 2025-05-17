@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
+import { z } from "zod";
 
 import { SessionModel } from "../models/session.model";
 import { HTTP_STATUS } from "../constants/http";
+import { appAssert } from "../utils/appAssert";
 
 
 class SessionConroller {
@@ -34,6 +36,26 @@ class SessionConroller {
                 )
         } catch (error) {
             next()
+        }
+    }
+
+
+    async deleteSesion(req: Request, res: Response, next: NextFunction) {
+        try {
+            const sessionId = z.string().parse(req.params.id)
+            const deleted = await SessionModel.findOneAndDelete({
+                _id: sessionId,
+                userId: req.userId
+            })
+            appAssert(deleted, HTTP_STATUS.NOT_FOUND, 'Session not found.')
+
+
+            res
+                .status(HTTP_STATUS.OK)
+                .json({ message: 'Session deleted!' })
+            
+        } catch (error) {
+            next(error)
         }
     }
 
