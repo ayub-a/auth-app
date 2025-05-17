@@ -6,8 +6,10 @@ import { APP_ORIGIN, NODE_ENV, PORT } from './constants/env'
 import { connectToDatabase } from './config/db'
 
 import authRouter from './routes/auth.route'
-import { errorMiddleware } from './middlewares/error.middleware'
+import userRouter from './routes/user.route'
 
+import { errorMiddleware } from './middlewares/error.middleware'
+import { authenticateMiddleware } from './middlewares/authenticate.middleware'
 
 const app = express()
 
@@ -21,6 +23,8 @@ app.use(cookieParser())
 
 
 app.use('/auth', authRouter)
+app.use('/user', authenticateMiddleware, userRouter)
+
 
 
 app.use(errorMiddleware)
