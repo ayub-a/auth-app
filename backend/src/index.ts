@@ -7,6 +7,7 @@ import { connectToDatabase } from './config/db'
 
 import authRouter from './routes/auth.route'
 import userRouter from './routes/user.route'
+import sessionRouter from './routes/session.route'
 
 import { errorMiddleware } from './middlewares/error.middleware'
 import { authenticateMiddleware } from './middlewares/authenticate.middleware'
@@ -24,7 +25,7 @@ app.use(cookieParser())
 
 app.use('/auth', authRouter)
 app.use('/user', authenticateMiddleware, userRouter)
-
+app.use('/sessions', authenticateMiddleware, sessionRouter)
 
 
 app.use(errorMiddleware)
