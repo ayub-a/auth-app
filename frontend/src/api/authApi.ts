@@ -10,6 +10,11 @@ interface IRegisterParams extends ILoginParams {
     confirmPassword: string
 }
 
+interface IPasswordResetParams {
+    verificationCode: string
+    password: string
+}
+
 
 class AuthApi {
 
@@ -17,6 +22,7 @@ class AuthApi {
     private static readonly REGISTER_PATH = '/auth/register'
     private static readonly VERIFY_EMAIL_PATH = '/auth/email/verify'
     private static readonly PASSWORD_FORGOT_PATH = '/auth/password/forgot'
+    private static readonly PASSWORD_RESET_PATH = '/auth/password/reset'
 
 
     async login(data: ILoginParams) {
@@ -37,6 +43,11 @@ class AuthApi {
     async passwordForgot(email: string) {
         return await api.post(AuthApi.PASSWORD_FORGOT_PATH, { email })
     }   
+
+
+    async passwordReset(payload: IPasswordResetParams) {
+        return api.post(AuthApi.PASSWORD_RESET_PATH, payload)
+    }
 
 }
 
