@@ -16,6 +16,7 @@ class AuthApi {
     private static readonly LOGIN_PATH = '/auth/login'
     private static readonly REGISTER_PATH = '/auth/register'
     private static readonly VERIFY_EMAIL_PATH = '/auth/email/verify'
+    private static readonly PASSWORD_FORGOT_PATH = '/auth/password/forgot'
 
 
     async login(data: ILoginParams) {
@@ -31,6 +32,11 @@ class AuthApi {
     async verifyEmail(code: string) {
         return await api.get(`${AuthApi.VERIFY_EMAIL_PATH}/${code}`)
     }
+
+
+    async passwordForgot(email: string) {
+        return await api.post(AuthApi.PASSWORD_FORGOT_PATH, { email })
+    }   
 
 }
 

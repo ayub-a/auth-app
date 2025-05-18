@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom"
 import { LoginPage } from "./pages/login"
 import { RegisterPage } from "./pages/register"
 import { VerifyEmail } from "./pages/verifyEmail"
+import { PasswordForgotPage } from "./pages/passwordForgot"
 
 
 const Home = () => {
@@ -17,7 +18,7 @@ function App() {
 		<Route path="/login" element={<LoginPage />}/>
 		<Route path="/register" element={<RegisterPage />}/>
 		<Route path="/email/verify/:code" element={<VerifyEmail />}/>
-
+		<Route path="/password/forgot" element={<PasswordForgotPage />}/>
 	</Routes>
 }
 
