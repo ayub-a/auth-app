@@ -15,15 +15,21 @@ class AuthApi {
 
     private static readonly LOGIN_PATH = '/auth/login'
     private static readonly REGISTER_PATH = '/auth/register'
+    private static readonly VERIFY_EMAIL_PATH = '/auth/email/verify'
 
 
     async login(data: ILoginParams) {
-        await api.post(AuthApi.LOGIN_PATH, data)
+        return await api.post(AuthApi.LOGIN_PATH, data)
     }
 
 
     async register(data: IRegisterParams) {
-        await api.post(AuthApi.REGISTER_PATH, data)
+        return await api.post(AuthApi.REGISTER_PATH, data)
+    }
+
+
+    async verifyEmail(code: string) {
+        return await api.get(`${AuthApi.VERIFY_EMAIL_PATH}/${code}`)
     }
 
 }
