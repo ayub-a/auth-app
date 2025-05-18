@@ -19,6 +19,7 @@ interface IPasswordResetParams {
 class AuthApi {
 
     private static readonly LOGIN_PATH = '/auth/login'
+    private static readonly LOGOUT_PATH = '/auth/logout'
     private static readonly REGISTER_PATH = '/auth/register'
     private static readonly VERIFY_EMAIL_PATH = '/auth/email/verify'
     private static readonly PASSWORD_FORGOT_PATH = '/auth/password/forgot'
@@ -27,6 +28,11 @@ class AuthApi {
 
     async login(data: ILoginParams) {
         return await api.post(AuthApi.LOGIN_PATH, data)
+    }
+
+
+    async logout() {
+        return api.get(AuthApi.LOGOUT_PATH)
     }
 
 
