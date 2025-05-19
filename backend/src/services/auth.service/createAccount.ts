@@ -9,6 +9,7 @@ import { VerificationCodeModel } from "../../models/verificationCode.model"
 import { appAssert } from "../../utils/appAssert"
 import { TimeUtils } from "../../utils/date"
 import { EmailUtils, emailUtils } from "../../utils/sendEmail"
+import { parseUserAgent } from "../../utils/userAgent"
 
 import { tokenService } from "../token.service"
 import { IAuthParams } from "."
@@ -39,7 +40,7 @@ export async function createAccount(data: IAuthParams) {
 
     const session = await SessionModel.create({
         userId: user._id,
-        userAgent: data.userAgent
+        userAgent: parseUserAgent(data.userAgent)   
     })
 
     const accessToken = tokenService.createAccessToken({ userId: user._id, sessionId: session._id })

@@ -1,7 +1,11 @@
 import { HTTP_STATUS } from "../../constants/http"
+
 import { SessionModel } from "../../models/session.model"
 import { UserModel } from "../../models/user.model"
+
 import { appAssert } from "../../utils/appAssert"
+import { parseUserAgent } from "../../utils/userAgent"
+
 import { tokenService } from "../token.service"
 
 import { IAuthParams } from "."
@@ -17,7 +21,7 @@ export async function login(data: IAuthParams) {
 
     const session = await SessionModel.create({
         userId: user._id,
-        userAgent: data.userAgent       
+        userAgent: parseUserAgent(data.userAgent)        
     })
 
     const accessToken = tokenService.createAccessToken({ userId: user._id, sessionId: session._id })
