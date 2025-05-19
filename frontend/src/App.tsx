@@ -7,6 +7,7 @@ import { PasswordForgotPage } from "./pages/passwordForgot"
 import { PasswordResetPage } from "./pages/passwordReset"
 import { AppContainer } from "./components/appContainer"
 import { ProfilePage } from "./pages/profile"
+import { SessionsPage } from "./pages/sessions"
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
 	return <Routes>
 		<Route path="/" element={<AppContainer />}>
 			<Route index element={<ProfilePage />}/>
+			<Route path="sessions" element={<SessionsPage />}/>
 		</Route>
 		
 		<Route path="/login" element={<LoginPage />}/>

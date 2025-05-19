@@ -22,13 +22,13 @@ export const UserMenu = () => {
     return (
         <Menu isLazy placement='right-start'>
 
-            <MenuButton position='absolute' left='1.5rem' bottom='1.5rem'>
+            <MenuButton position='fixed' left='1.5rem' bottom='1.5rem'>
                 <Avatar src="#"/>
             </MenuButton>
 
             <MenuList>
                 <MenuItem onClick={() => navigate('/')}>Profile</MenuItem>
-                <MenuItem onClick={() => navigate('/settings')}>Settings</MenuItem>
+                <MenuItem onClick={() => navigate('/sessions')}>Sessions</MenuItem>
                 <MenuItem onClick={() => logout()}>Logout</MenuItem>
             </MenuList>
 
