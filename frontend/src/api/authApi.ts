@@ -55,6 +55,11 @@ class AuthApi {
         return api.post(AuthApi.PASSWORD_RESET_PATH, payload)
     }
 
+
+    async refresh() {
+        return await api.get('/auth/refresh')
+    }
+
 }
 
 

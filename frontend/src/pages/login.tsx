@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Box, Container, Flex, FormControl, FormLabel, Heading, Input, Stack, Link as ChakraLink, Button, Text } from "@chakra-ui/react"
 import { useMutation } from "@tanstack/react-query"
 
@@ -8,14 +8,17 @@ import { authApi } from "../api/authApi"
 
 export const LoginPage = () => {
     const navigate = useNavigate()
+    const location = useLocation()
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const redirectUrl = location.state?.redirectUrl || '/'
 
     
     const { mutate: signIn, isPending, isError } = useMutation({
         mutationFn: authApi.login,
         onSuccess: () => {
-            navigate('/', { replace: true })
+            navigate(redirectUrl, { replace: true })
         }
     })
 
