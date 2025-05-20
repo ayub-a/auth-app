@@ -1,4 +1,5 @@
 
 export const enum EAappErrorCode {
-    InvalidAccessToken = 'InvalidAccessToken'
+    InvalidAccessToken = 'InvalidAccessToken',
+    SessionDeleted = 'SessionDeleted'
 }

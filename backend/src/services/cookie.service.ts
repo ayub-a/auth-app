@@ -1,5 +1,7 @@
 import { CookieOptions, Response } from "express"
+
 import { TimeUtils } from "../utils/date"
+import { NODE_ENV } from "../constants/env"
 
 
 interface IParams {
@@ -15,10 +17,14 @@ export class CookieService {
     static readonly ACCESS_TOKEN = 'accessToken'
     static readonly REFRESH_TOKEN = 'refreshToken'
 
+    private static get isProduction() {
+        return NODE_ENV === 'production'
+    }
+
     private static readonly defaults: CookieOptions = {
-        sameSite: 'strict',
+        sameSite: CookieService.isProduction ? 'strict' : 'lax',
         httpOnly: true,
-        secure: true
+        secure: CookieService.isProduction
     }
 
     static get accessTokenCookieOptions(): CookieOptions {

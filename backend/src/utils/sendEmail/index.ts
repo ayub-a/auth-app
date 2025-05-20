@@ -32,13 +32,18 @@ export class EmailUtils {
     }
 
 
+    private static get isProduction() {
+        return NODE_ENV === 'production'
+    }
+
+
     private static get getFromEmail() {
-        return NODE_ENV === 'development' ? 'onboarding@resend.dev' : EMAIL_SENDER
+        return EmailUtils.isProduction ? 'onboarding@resend.dev' : EMAIL_SENDER
     }
 
 
     private static getToEmail(to: string) {
-        return NODE_ENV === 'development' ? 'delivered@resend.dev' : to
+        return EmailUtils.isProduction ? 'delivered@resend.dev' : to
     }
 
 

@@ -4,10 +4,11 @@ import { HTTP_STATUS } from "../constants/http";
 import { EAappErrorCode } from "../constants/appErrorCode";
 
 import { tokenService } from "../services/token.service";
+import { SessionModel } from "../models/session.model";
 import { appAssert } from "../utils/appAssert";
 
 
-export const authenticateMiddleware: RequestHandler = (req, res, next) => {
+export const authenticateMiddleware: RequestHandler = async (req, res, next) => {
     const accessToken = req.cookies.accessToken as string | undefined
     appAssert(
         accessToken, 
@@ -15,6 +16,7 @@ export const authenticateMiddleware: RequestHandler = (req, res, next) => {
         'Not Authorized', 
         EAappErrorCode.InvalidAccessToken
     )
+
 
     const { payload, error } = tokenService.verify(accessToken)
     appAssert(
@@ -24,6 +26,14 @@ export const authenticateMiddleware: RequestHandler = (req, res, next) => {
         EAappErrorCode.InvalidAccessToken
     )
 
+
+    const user = await SessionModel.findOne({
+        _id: payload.sessionId,
+        userId: payload.userId
+    })
+    appAssert(user, HTTP_STATUS.NOT_FOUND, 'Session was deleted or expired', EAappErrorCode.SessionDeleted)
+
+    
     req.userId = payload.userId
     req.sessionId = payload.sessionId
     next()
