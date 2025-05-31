@@ -12,7 +12,7 @@ export const AppContainer = () => {
     return (
         isLoading
         ?
-        <Center w='100vh' h='90vh' flexDir='column'>
+        <Center w='100vw' h='90vh'>
             <Spinner mb={4}/>
         </Center>
         :

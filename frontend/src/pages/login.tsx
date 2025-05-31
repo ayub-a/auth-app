@@ -42,20 +42,32 @@ export const LoginPage = () => {
                         isError && <Box mb={3} color='red.400'>Invalid email or password</Box>
                     }
                     <Stack spacing={4}>
-
                         <FormControl id='email'>
-                            <FormLabel>Email address</FormLabel>
+                            <FormLabel display='flex' alignItems='center' justifyContent='space-between'>
+                                <Text>Email address</Text>
+
+                                <Text align='center' fontSize='sm' color='text.muted'>
+                                     test@test.com 
+                                </Text>
+                            </FormLabel>
+
                             <Input 
                                 type='email' 
                                 autoFocus 
                                 value={email} 
-                                placeholder="test@test.com" 
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </FormControl>
                         
                          <FormControl id='password'>
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel display='flex' alignItems='center' justifyContent='space-between'>
+                                <Text>Password</Text>
+                              
+                                <Text align='center' fontSize='sm' color='text.muted'>
+                                    123123
+                                </Text>
+                            </FormLabel>
+
                             <Input 
                                 type='password' 
                                 value={password} 
