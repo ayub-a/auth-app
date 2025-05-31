@@ -10,5 +10,27 @@ services:
         volumes:
             - ./backend:/app
             - /app/node_modules
+        networks:
+            - fullstack-auth-app
         ports:
             - 3001:3001
+
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile.dev
+        restart: unless-stopped
+        env_file: ./frontend/.env
+        volumes:
+            - ./frontend:/app
+            - /app/node_modules
+        networks:
+            - fullstack-auth-app
+        ports:
+            - 5173:5173
+        depends_on:
+            - api
+
+networks:
+    fullstack-auth-app:
+        driver: bridge
