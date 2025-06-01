@@ -38,12 +38,12 @@ export class EmailUtils {
 
 
     private static get getFromEmail() {
-        return EmailUtils.isProduction ? 'onboarding@resend.dev' : EMAIL_SENDER
+        return EmailUtils.isProduction ? EMAIL_SENDER : 'onboarding@resend.dev'
     }
 
 
     private static getToEmail(to: string) {
-        return EmailUtils.isProduction ? 'delivered@resend.dev' : to
+        return EmailUtils.isProduction ? to : 'delivered@resend.dev'
     }
 
 
